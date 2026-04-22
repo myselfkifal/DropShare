@@ -2,8 +2,6 @@
 
 DropShare is a sleek, ephemeral file-sharing platform designed for speed, security, and premium user experience. Whether you're sending large project archives or private documents, DropShare handles it with local network auto-detection and zero-knowledge privacy.
 
-![DropShare Dashboard](https://raw.githubusercontent.com/username/repo/main/screenshots/upload.png)
-
 ## Key Features
 
 - **Massive Capacity**: Share files up to 500MB with automatic server-side Zipping for multi-file uploads.
