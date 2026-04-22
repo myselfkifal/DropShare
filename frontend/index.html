@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DropShare | Secure File Sharing</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-blur"></div>
+    
+    <main class="app-container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-cloud-arrow-up"></i>
+                <h1>Drop<span>Share</span></h1>
+            </div>
+            <p>Simple, secure, and ephemeral file sharing.</p>
+            <button id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <section class="upload-section card">
+            <div id="drop-zone" class="drop-zone">
+                <div class="drop-zone-content">
+                    <i class="fas fa-file-export upload-icon"></i>
+                    <p>Select up to 5 files or <span>browse</span></p>
+                    <input type="file" id="file-input" multiple hidden>
+                </div>
+                <div id="file-list" class="file-list hidden"></div>
+                <div id="file-info" class="file-info hidden">
+                    <i class="fas fa-file-alt"></i>
+                    <span id="filename-display">filename.jpg</span>
+                    <button id="remove-file" class="icon-btn"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <div class="upload-controls">
+                <div class="control-row">
+                    <div class="control-group">
+                        <label for="expiry-select">Expires in</label>
+                        <select id="expiry-select">
+                            <option value="1h">1 Hour</option>
+                            <option value="24h" selected>24 Hours</option>
+                            <option value="7d">7 Days</option>
+                        </select>
+                    </div>
+    
+                    <div class="control-group">
+                        <label for="custom-alias">Custom Link (optional)</label>
+                        <input type="text" id="custom-alias" placeholder="my-custom-link" minlength="4">
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <div class="control-group">
+                        <label for="one-time-check" class="checkbox-group">
+                            <input type="checkbox" id="one-time-check">
+                            One-time download
+                        </label>
+                    </div>
+                    <div class="control-group">
+                        <label for="file-password">Password (optional)</label>
+                        <input type="password" id="file-password" placeholder="••••••••">
+                    </div>
+                </div>
+                
+                <button id="upload-btn" class="primary-btn" disabled>
+                    <span class="btn-text">Upload File</span>
+                    <div class="loader hidden"></div>
+                </button>
+            </div>
+
+            <div id="progress-container" class="progress-container hidden">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                </div>
+                <span id="progress-text">0%</span>
+            </div>
+        </section>
+
+        <section id="result-section" class="result-section card hidden">
+            <h3>Your Link is Ready!</h3>
+            
+            <div class="result-layout">
+                <div class="result-info">
+                    <div class="link-label">Local Link (This PC)</div>
+                    <div class="link-box">
+                        <input type="text" id="share-url" readonly>
+                        <button id="copy-btn" class="icon-btn" title="Copy to clipboard">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                    <div class="link-label">Mobile Link (Scan QR)</div>
+                    <div class="link-box">
+                        <input type="text" id="network-url" readonly style="color: var(--primary);">
+                    </div>
+                    <p class="expiry-note">Expires on <span id="expiry-display">...</span></p>
+
+                    <div class="share-actions">
+                        <button id="whatsapp-btn" class="share-btn whatsapp" title="Share to WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                            Share on WhatsApp
+                        </button>
+                        <button id="email-btn" class="share-btn email" title="Share via Email">
+                            <i class="far fa-envelope"></i>
+                            Share via Email
+                        </button>
+                    </div>
+                </div>
+                <div class="qr-container">
+                    <div id="qrcode"></div>
+                    <span>Scan to open on mobile</span>
+                </div>
+            </div>
+
+            <button id="new-upload-btn" class="secondary-btn">Upload Another</button>
+        </section>
+
+        <!-- Sharing History -->
+        <section id="history-section" class="card hidden">
+            <div class="history-header">
+                <h3><i class="fas fa-history"></i> Your History</h3>
+                <button id="clear-history" class="icon-btn" title="Clear all history">
+                    <i class="fas fa-trash-alt"></i> Clear
+                </button>
+            </div>
+            <div id="history-list" class="history-list">
+                <!-- History items injected here -->
+            </div>
+        </section>
+
+        <div id="toast" class="toast hidden">
+            <span id="toast-message"></span>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 DropShare. Securely shared, naturally deleted.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

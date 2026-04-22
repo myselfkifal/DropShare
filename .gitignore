@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venc/
+.env
+
+# Project Specific
+uploads/
+file_sharing.db
+.vscode/
+.idea/
+
+# OS specific
+.DS_Store
+Thumbs.db

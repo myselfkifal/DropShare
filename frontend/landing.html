@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DropShare | Secure File Retrieval</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-blur"></div>
+    
+    <main class="app-container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-cloud-arrow-up"></i>
+                <h1>Drop<span>Share</span></h1>
+            </div>
+        </header>
+
+        <section id="landing-card" class="card" style="min-height: 400px; display: flex; align-items: center; justify-content: center;">
+            <!-- Loading -->
+            <div id="loading-state" class="landing-container">
+                <div class="loader"></div>
+                <p>Retrieving file info...</p>
+            </div>
+
+            <!-- Password Lock -->
+            <div id="password-state" class="landing-container hidden">
+                <div class="password-lock">
+                    <div class="lock-header">
+                        <i class="fas fa-lock"></i>
+                        <h2>File is Protected</h2>
+                        <p style="margin-bottom: 25px;">Please enter the password to access this file.</p>
+                    </div>
+                    <form id="unlock-form" class="unlock-form">
+                        <div class="control-group">
+                            <input type="password" id="entry-password" placeholder="Enter password" required 
+                                   style="border: 1px solid rgba(255,255,255,0.2); margin-bottom: 10px;">
+                        </div>
+                        <button type="submit" class="primary-btn" style="width: 100%;">
+                            <i class="fas fa-unlock-alt"></i>
+                            Unlock File
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- File Info Display -->
+            <div id="file-display" class="landing-container hidden">
+                <div id="image-preview-container" class="hidden" style="width: 100%;"></div>
+                
+                <div class="file-main-info">
+                    <i id="file-icon" class="fas fa-file-contract"></i>
+                    <h2 id="display-filename" class="file-name">filename.zip</h2>
+                    <div class="file-meta">
+                        <span id="display-size">0 KB</span>
+                        <span id="display-expiry">...</span>
+                    </div>
+                </div>
+
+                <div class="download-box">
+                    <button id="download-btn" class="primary-btn" style="width: 100%;">
+                        <i class="fas fa-download"></i>
+                        Download File
+                    </button>
+                    <p id="one-time-warning" class="expiry-note hidden" style="margin-top: 15px; color: var(--error);">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Warning: This is a one-time link.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Error -->
+            <div id="error-state" class="landing-container hidden">
+                <i class="fas fa-circle-exclamation" style="font-size: 3rem; color: var(--error);"></i>
+                <h2 id="error-title">Link Invalid</h2>
+                <p id="error-message">This link has expired or never existed.</p>
+                <a href="/" class="secondary-btn" style="margin-top: 15px;">Go Home</a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const code = window.location.pathname.split('/').pop();
+            const states = {
+                loading: document.getElementById('loading-state'),
+                password: document.getElementById('password-state'),
+                file: document.getElementById('file-display'),
+                error: document.getElementById('error-state')
+            };
+
+            const unlockForm = document.getElementById('unlock-form');
+            const errorMsg = document.getElementById('error-message');
+
+            let currentPassword = '';
+
+            const showState = (state) => {
+                Object.values(states).forEach(el => {
+                    if (el) el.classList.add('hidden');
+                });
+                if (states[state]) states[state].classList.remove('hidden');
+            };
+
+            const populateFile = (data) => {
+                document.getElementById('display-filename').textContent = data.filename;
+                document.getElementById('display-size').textContent = data.size;
+                const expiry = new Date(data.expires_at);
+                document.getElementById('display-expiry').textContent = `Expires ${expiry.toLocaleString()}`;
+                
+                if (data.is_one_time) document.getElementById('one-time-warning').classList.remove('hidden');
+                
+                document.getElementById('download-btn').onclick = () => {
+                   window.location.href = `/download/${code}?p=${encodeURIComponent(currentPassword)}`;
+                };
+                showState('file');
+            };
+
+            try {
+                const response = await fetch(`/api/file/${code}`);
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || 'Invalid link');
+                }
+                const data = await response.json();
+
+                if (data.password_protected) {
+                    showState('password');
+                    unlockForm.onsubmit = async (e) => {
+                        e.preventDefault();
+                        const pwd = document.getElementById('entry-password').value;
+                        try {
+                            const unlockRes = await fetch(`/api/file/${code}/unlock`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ password: pwd })
+                            });
+                            
+                            if (unlockRes.ok) {
+                                currentPassword = pwd;
+                                const unlockData = await unlockRes.json();
+                                populateFile(unlockData);
+                            } else {
+                                alert('Incorrect password. Please try again.');
+                            }
+                        } catch (err) {
+                            alert('Connection error. Please try again.');
+                        }
+                    };
+                } else {
+                    populateFile(data);
+                }
+            } catch (err) {
+                errorMsg.textContent = err.message;
+                showState('error');
+            }
+        });
+    </script>
+</body>
+</html>
