@@ -9,8 +9,7 @@ from routes.upload import upload_bp
 from routes.download import download_bp
 from routes.cleanup import cleanup_expired_files
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all is now handled inside app.before_request
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(BASE_DIR)
@@ -36,6 +35,15 @@ app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024 # 500 MB
 # Register Blueprints first so their routes have priority
 app.register_blueprint(upload_bp)
 app.register_blueprint(download_bp)
+
+@app.before_request
+def initialize_database():
+    if not getattr(app, '_database_initialized', False):
+        try:
+            Base.metadata.create_all(bind=engine)
+            app._database_initialized = True
+        except Exception as e:
+            app.logger.error(f"Database initialization failed: {e}")
 
 # Specific route for the homepage
 @app.route('/')

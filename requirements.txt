@@ -1,5 +1,6 @@
 flask
 flask-cors
+sqlalchemy
 flask-sqlalchemy
 python-dotenv
 werkzeug
