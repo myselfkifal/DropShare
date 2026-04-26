@@ -3,4 +3,3 @@ flask-cors
 flask-sqlalchemy
 python-dotenv
 werkzeug
-sqlite3

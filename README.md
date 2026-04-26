@@ -36,7 +36,7 @@ DropShare is a sleek, ephemeral file-sharing platform designed for speed, securi
 
 3. **Run the server:**
    ```bash
-   python -m backend.main
+   python -m api.index
    ```
 
 4. **Open in browser:**

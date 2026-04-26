@@ -14,7 +14,11 @@ upload_bp = Blueprint('upload', __name__)
 
 MAX_FILE_SIZE = 500 * 1024 * 1024  # 500MB
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-UPLOAD_DIR = os.path.join(PROJECT_ROOT, "uploads")
+
+if os.environ.get('VERCEL'):
+    UPLOAD_DIR = "/tmp/uploads"
+else:
+    UPLOAD_DIR = os.path.join(PROJECT_ROOT, "uploads")
 
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)

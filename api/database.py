@@ -2,7 +2,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./file_sharing.db"
+import os
+
+if os.environ.get('VERCEL'):
+    DATABASE_PATH = "/tmp/file_sharing.db"
+else:
+    DATABASE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "file_sharing.db")
+
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
