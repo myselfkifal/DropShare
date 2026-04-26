@@ -7,7 +7,7 @@ import os
 if os.environ.get('VERCEL'):
     DATABASE_PATH = "/tmp/file_sharing.db"
 else:
-    DATABASE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "file_sharing.db")
+    DATABASE_PATH = os.path.join(os.path.dirname(__file__), "file_sharing.db")
 
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
 

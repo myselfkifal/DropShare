@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
 import os
-from ..models import FileModel
+from models import FileModel
 
 def cleanup_expired_files(db: Session, upload_dir: str):
     """

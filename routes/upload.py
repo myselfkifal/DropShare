@@ -6,14 +6,14 @@ import zipfile
 import time
 import io
 from werkzeug.security import generate_password_hash
-from ..database import SessionLocal
-from ..models import FileModel
-from ..utils.security import is_allowed_file, generate_secure_filename, generate_file_code
+from database import SessionLocal
+from models import FileModel
+from utils.security import is_allowed_file, generate_secure_filename, generate_file_code
 
 upload_bp = Blueprint('upload', __name__)
 
 MAX_FILE_SIZE = 500 * 1024 * 1024  # 500MB
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
 
 if os.environ.get('VERCEL'):
     UPLOAD_DIR = "/tmp/uploads"

@@ -3,20 +3,20 @@ from flask_cors import CORS
 import os
 import threading
 import time
-from .database import engine, Base, SessionLocal
-from .routes.upload import upload_bp
-from .routes.download import download_bp
-from .routes.cleanup import cleanup_expired_files
+from database import engine, Base, SessionLocal
+from routes.upload import upload_bp
+from routes.download import download_bp
+from routes.cleanup import cleanup_expired_files
 
 # Create tables
 Base.metadata.create_all(bind=engine)
 
-FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
+FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "frontend")
 
 if os.environ.get('VERCEL'):
     UPLOAD_DIR = "/tmp/uploads"
 else:
-    UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+    UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
 
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
