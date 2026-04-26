@@ -4,10 +4,10 @@ from flask_cors import CORS
 import os
 import threading
 import time
-from database import engine, Base, SessionLocal
-from routes.upload import upload_bp
-from routes.download import download_bp
-from routes.cleanup import cleanup_expired_files
+from .database import engine, Base, SessionLocal
+from .routes.upload import upload_bp
+from .routes.download import download_bp
+from .routes.cleanup import cleanup_expired_files
 
 # Base.metadata.create_all is now handled inside app.before_request
 

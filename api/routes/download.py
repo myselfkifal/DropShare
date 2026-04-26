@@ -2,8 +2,8 @@ from flask import Blueprint, send_from_directory, abort, jsonify, request
 import os
 from datetime import datetime
 from werkzeug.security import check_password_hash
-from database import SessionLocal
-from models import FileModel
+from ..database import SessionLocal
+from ..models import FileModel
 
 download_bp = Blueprint('download', __name__)
 
