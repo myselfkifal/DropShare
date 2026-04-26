@@ -291,7 +291,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const expiryDate = new Date(expiry);
         expiryDisplay.textContent = expiryDate.toLocaleString();
         
-        generateQRCode(networkUrl);
+        // Use public URL for QR code on production (Vercel), and network URL for local dev
+        const qrUrl = (window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1')) ? networkUrl : url;
+        generateQRCode(qrUrl);
         
         // Setup Social Sharing
         const message = `Check out this file on DropShare: ${url}`;
