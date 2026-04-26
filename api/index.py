@@ -13,12 +13,13 @@ from routes.cleanup import cleanup_expired_files
 Base.metadata.create_all(bind=engine)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+PROJECT_ROOT = os.path.dirname(BASE_DIR)
+FRONTEND_DIR = os.path.join(PROJECT_ROOT, "frontend")
 
 if os.environ.get('VERCEL'):
     UPLOAD_DIR = "/tmp/uploads"
 else:
-    UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+    UPLOAD_DIR = os.path.join(PROJECT_ROOT, "uploads")
 
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
