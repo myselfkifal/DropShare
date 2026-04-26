@@ -11,18 +11,24 @@ from routes.cleanup import cleanup_expired_files
 # Create tables
 Base.metadata.create_all(bind=engine)
 
-FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "frontend")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 
 if os.environ.get('VERCEL'):
     UPLOAD_DIR = "/tmp/uploads"
 else:
-    UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
+    UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "healthy", "vercel": bool(os.environ.get('VERCEL'))})
+
 app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024 # 500 MB
 
 # Register Blueprints first so their routes have priority

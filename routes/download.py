@@ -7,7 +7,7 @@ from models import FileModel
 
 download_bp = Blueprint('download', __name__)
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FRONTEND_DIR = os.path.join(PROJECT_ROOT, "frontend")
 
 if os.environ.get('VERCEL'):
